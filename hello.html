@@ -8,19 +8,28 @@
   <h1>JavaScript direkt im HTML</h1>
 
   <script>
-    let einkaufsliste = [];
-	let anzahl = 0;
-	do {
-		einkaufsliste[anzahl] = prompt("Welches Produkt möchtest du kaufen?");
-		
-	} while (einkaufsliste[anzahl] != "");
-	
-	for (let produkt in einkaufsliste){
-		console.log(einkaufsliste[produkt].toString());
-	}
-	
+    let einkaufsliste = {};
+
+    while (true) {
+      let zutat = prompt("Welches Produkt möchtest du kaufen? (leer = fertig)");
+
+      if (zutat === "" || zutat === null) {
+        break;
+      }
+
+      let menge = Number(prompt("Wieviele?"));
+
+      if (einkaufsliste[zutat]) {
+        einkaufsliste[zutat] = einkaufsliste[zutat] + menge;
+      } else {
+        einkaufsliste[zutat] = menge;
+      }
+    }
+
+    console.log("Einkaufsliste:");
+    for (let produkt in einkaufsliste) {
+      console.log(einkaufsliste[produkt] + "x " + produkt);
+    }
   </script>
 </body>
 </html>
-
-
