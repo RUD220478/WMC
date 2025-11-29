@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>JavaScript Übung</title>
+</head>
+<body>
+  <h1>JavaScript direkt im HTML</h1>
+
+  <script>
+    let einkaufsliste = [];
+	let anzahl = 0;
+	do {
+		einkaufsliste[anzahl] = prompt("Welches Produkt möchtest du kaufen?");
+		
+	} while (einkaufsliste[anzahl] != "");
+	
+	for (let produkt in einkaufsliste){
+		console.log(einkaufsliste[produkt].toString());
+	}
+	
+  </script>
+</body>
+</html>
+
+
