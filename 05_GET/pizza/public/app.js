@@ -40,5 +40,44 @@ async function fetchOrders() {
   }
 }
 
+async function addClick() {
+    const nameInput   = document.getElementById("order-name");
+    const name = nameInput.value.trim();
+    const pizzaInput = document.getElementById("order-pizza");
+    const pizza = pizzaInput.value.trim();
+    const button = document.getElementById("add-btn");
+    const statusEl = document.getElementById("status");
+
+    if (!name || !pizza) {
+      statusEl.textContent = "Name and pizza required.";
+      return;
+    }
+
+    button.disabled = true;
+    await addOrder(name, pizza);
+    button.disabled = false;
+
+    nameInput.value = "";
+    pizzaInput.value = "";
+    nameInput.focus();
+}
+
+async function addOrder(name, pizza) {
+  const statusEl = document.getElementById("status");
+  try {
+    const res = await fetch("/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, pizza }),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    await fetchOrders();
+    statusEl.textContent = "Order added.";
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = `Error while added a order: ${err.message}`;
+  }
+}
+
 // When page isloaded the fetchOrders is called
 window.addEventListener("DOMContentLoaded", fetchOrders);

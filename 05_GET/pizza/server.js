@@ -103,8 +103,6 @@ app.delete("/orders/:id", (req, res) => {
   return res.status(204).send(); // No Content
 });
 
-
-
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
