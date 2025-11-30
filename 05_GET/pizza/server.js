@@ -4,6 +4,9 @@ const port = 3000;
 
 app.use(express.json());
 
+const path = require("path");
+app.use(express.static(path.join(__dirname, "public")));
+
 const orders = [
   { id:  1, name: "Anna",    pizza: "Salami" },
   { id:  2, name: "Susi",    pizza: "Tomato" },
@@ -99,6 +102,8 @@ app.delete("/orders/:id", (req, res) => {
   // No content is returned 
   return res.status(204).send(); // No Content
 });
+
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
