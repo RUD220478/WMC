@@ -47,6 +47,25 @@ app.post("/orders", (req, res) => {
   res.status(201).json(newOrder);
 });
 
+app.put("/orders/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const { name, pizza } = req.body;
+
+  if (!name || !pizza) {
+    return res.status(400).json({ error: "Name and pizza are required!" });
+  }
+
+  // Returns the index of the order with the id.
+  const pos = orders.findIndex(o => o.id === id);
+  if (pos === -1) {
+    return res.status(404).json({ error: "Order not found" });
+  }
+
+  // update an existing order; replace the object
+  orders[pos] = { id, name, pizza };
+  res.json(orders[pos]);
+});
+
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
