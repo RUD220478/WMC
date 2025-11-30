@@ -103,6 +103,5 @@ async function deleteOrder(id) {
   }
 }
 
-
 // When page isloaded the fetchOrders is called
 window.addEventListener("DOMContentLoaded", fetchOrders);
