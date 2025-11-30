@@ -19,9 +19,17 @@ app.get("/", (req, res) => {
   res.send("Hello, World from Express!");
 });
 
-// **NEW** GET all Students as json
 app.get("/orders", (req, res) => {
   res.json(orders);
+});
+
+app.get("/orders/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const order = orders.find(o => o.id === id);
+  if (!order) {
+    return res.status(404).json({ error: "Order not found" });
+  }
+  res.json(order);
 });
 
 app.listen(port, () => {
