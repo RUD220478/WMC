@@ -85,6 +85,21 @@ app.patch("/orders/:id", (req, res) => {
   res.json(order);
 });
 
+// DELETE
+app.delete("/orders/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const pos = orders.findIndex(o => o.id === id);
+
+  if (pos === -1) {
+    return res.status(404).json({ error: "Order not found" });
+  }
+
+  // Removes the order at the pos position
+  orders.splice(pos, 1);
+  // No content is returned 
+  return res.status(204).send(); // No Content
+});
+
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
