@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
+app.use(express.json());
+
 const orders = [
   { id:  1, name: "Anna",    pizza: "Salami" },
   { id:  2, name: "Susi",    pizza: "Tomato" },
@@ -30,6 +32,19 @@ app.get("/orders/:id", (req, res) => {
     return res.status(404).json({ error: "Order not found" });
   }
   res.json(order);
+});
+
+app.post("/orders", (req, res) => {
+  const { name, pizza } = req.body;
+
+  if (!name || !pizza) {
+    return res.status(400).json({ error: "Name and Pizza are required!" });
+  }
+  
+  const newId = orders.length ? orders[orders.length - 1].id + 1 : 1;
+  const newOrder = { id: newId, name, pizza };
+  orders.push(newOrder);
+  res.status(201).json(newOrder);
 });
 
 app.listen(port, () => {
