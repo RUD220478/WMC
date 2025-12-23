@@ -29,8 +29,17 @@ async function fetchMovies() {
       const tdYear = document.createElement("td");
       tdYear.textContent = o.year;
 
-      // tdRaum ?! Wie umbenennen
-      tr.append(tdId, tdTitle, tdYear);
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "Delete";
+      delBtn.className = "delete-btn";
+      delBtn.id = "delete-btn";
+      delBtn.onclick = async () => {
+        if (!confirm(`Remove movie ${o.title}?`)) return;
+        await deleteMovie(o.id);
+        await fetchMovies();
+      };
+
+      tr.append(tdId, tdTitle, tdYear, delBtn);
       tbody.appendChild(tr);
     }
 
@@ -38,6 +47,61 @@ async function fetchMovies() {
   } catch (err) {
     console.error(err);
     statusEl.textContent = "Error while loading the data.";
+  }
+}
+
+
+async function addMovie(title, year) {
+  const statusEl = document.getElementById("status");
+  try {
+    const res = await fetch("/movies", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, year }),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    await fetchMovies();
+    statusEl.textContent = "Movie added.";
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = `Error while adding movie: ${err.message}`;
+  }
+}
+
+async function addClick() {
+  const titleInput   = document.getElementById("movie-title");
+  const title = titleInput.value.trim();
+  const yearInput = document.getElementById("movie-year");
+  const year = yearInput.value.trim();
+  const button = document.getElementById("add-btn");
+  const statusEl = document.getElementById("status");
+
+  if (!title || !year) {
+    statusEl.textContent = "Movie title and year of release required.";
+    return;
+  }
+
+  button.disabled = true;
+  await addMovie(title, year);
+  button.disabled = false;
+
+  titleInput.value = "";
+  yearInput.value = "";
+  titleInput.focus();
+}
+
+async function deleteMovie(id) {
+  const statusEl = document.getElementById("status");
+  try {
+    const res = await fetch(`/movies/${id}`, { method: "DELETE" });
+    if (res.status === 204) {
+      statusEl.textContent = `Movie ${id} removed.`;
+    } else {
+      throw new Error(msg.error || `HTTP ${res.status}`);
+    }
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = `Error while removing: ${err.message}`;
   }
 }
 

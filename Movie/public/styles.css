@@ -1,5 +1,6 @@
 body {
   font-family: Arial, sans-serif;
+
   margin: 0;
   background: #f7f7f8;
   color: #111;
@@ -65,6 +66,19 @@ tr:hover {
   cursor: pointer;
 }
 
+#delete-btn {
+  padding: 8px 16px;
+  background: #0078ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 #add-btn:hover {
+  background: #005fcc;
+}
+
+#delete-btn:hover {
   background: #005fcc;
 }

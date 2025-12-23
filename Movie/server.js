@@ -26,11 +26,39 @@ app.get("/movies/:id", (req, res) => {
   const id = parseInt(req.params.id);
   const title = movies.find(o => o.id === id)
 
-  if (!order) {
+  if (!title) {
     return res.status(404).json({ error: "Movie not found" });
   }
 
-  res.json(order);
+  res.json(title);
+});
+
+app.post("/movies", (req, res) => {
+  const { title, year } = req.body;
+
+  //
+  if (!title || !year) {
+    return res.status(400).json({ error: "Movie title and year of release are required!" });
+  }
+  // ID
+  const newId = movies.length ? movies[movies.length - 1].id + 1 : 1;
+
+  const newMovie = { id: newId, title, year};
+  movies.push(newMovie);
+  res.status(201).json(newMovie);
+});
+
+app.delete("/movies/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const pos = movies.findIndex(s => s.id === id);
+
+  if (pos === -1) {
+    return res.status(404).json({ error: "Movie not found" });
+  }
+  // Removes the movie at the pos position
+  movies.splice(pos, 1);
+  // No content is returned
+  return res.status(204).send(); // No Content
 });
 
 app.listen(port, () => {
