@@ -9,13 +9,13 @@ const path = require("path");
 app.use(express.static(path.join(__dirname, "public")));
 
 const movies = [
-  { id:  1, title: "Dracula", year: 2010 },
-  { id:  2, title: "Harry Potter", year: 2005 },
-  { id: 3, title: "Anna Meier", year: 2003 }
+  { id: 1, title: "Dracula", year: 2010, rating: null },
+  { id: 2, title: "Harry Potter", year: 2005, rating: null },
+  { id: 3, title: "Anna Meier", year: 2003, rating: null }
 ];
 
 app.get("/", (req, res) => {
-  res.send("Hello, Thomas, Andrea and World from Express!");
+  res.send("hello, world.");
 });
 
 app.get("/movies", (req, res) => {
@@ -46,6 +46,17 @@ app.post("/movies", (req, res) => {
   const newMovie = { id: newId, title, year};
   movies.push(newMovie);
   res.status(201).json(newMovie);
+});
+
+app.patch("/movies/:id/rating", (req, res) => {
+  const id = parseInt(req.params.id);
+  const { rating } = req.body;
+  const movie = movies.find(m => m.id === id);
+  if (!movie) {
+    return res.status(404).json({ error: "Movie not found" });
+  }
+  movie.rating = rating;
+  res.json(movie);
 });
 
 app.delete("/movies/:id", (req, res) => {

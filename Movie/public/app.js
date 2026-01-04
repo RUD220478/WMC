@@ -3,20 +3,14 @@ async function fetchMovies() {
   const tbody = document.querySelector("#movies-table tbody");
 
   try {
-    // Set the status
     statusEl.textContent = "Loading List of movies...";
 
-    // Use the route to get the data
     const res = await fetch("/movies");
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-    // Get an array of movies
     const movies = await res.json();
-
-    // Clear the table
     tbody.innerHTML = "";
 
-    // Add rows to the table
     for (const o of movies) {
       const tr = document.createElement("tr");
 
@@ -29,18 +23,45 @@ async function fetchMovies() {
       const tdYear = document.createElement("td");
       tdYear.textContent = o.year;
 
+      const tdRating = document.createElement("td");
+
+      // If movie has been rated, show the rating
+      if (o.rating != null) {
+        tdRating.textContent = o.rating;
+      } else {
+        // Otherwise show a Rate button
+        const rateBtn = document.createElement("button");
+        rateBtn.textContent = "Rate";
+        rateBtn.className = "rate-btn";
+
+        rateBtn.onclick = async () => {
+          const rating = prompt(`Give a rating for ${o.title} (1–5):`);
+          // Error-Checking for input
+          if (Number.isNaN(rating) || rating < 1 || rating > 5) {
+            alert("Invalid. Please enter a number between 1 and 5.");
+            return;
+          }
+          tdRating.textContent = rating;
+        };
+        tdRating.appendChild(rateBtn);
+      }
+
       const delBtn = document.createElement("button");
       delBtn.textContent = "Delete";
       delBtn.className = "delete-btn";
-      delBtn.id = "delete-btn";
+
       delBtn.onclick = async () => {
         if (!confirm(`Remove movie ${o.title}?`)) return;
         await deleteMovie(o.id);
         await fetchMovies();
       };
 
-      tr.append(tdId, tdTitle, tdYear, delBtn);
+      const tdRemove = document.createElement("td");
+      tdRemove.appendChild(delBtn);
+
+      tr.append(tdId, tdTitle, tdYear, tdRating, tdRemove);
       tbody.appendChild(tr);
+
     }
 
     statusEl.textContent = `Loaded a list of ${movies.length} movies`;
@@ -49,6 +70,7 @@ async function fetchMovies() {
     statusEl.textContent = "Error while loading the data.";
   }
 }
+
 
 
 async function addMovie(title, year) {

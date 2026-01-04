@@ -66,9 +66,18 @@ tr:hover {
   cursor: pointer;
 }
 
-#delete-btn {
+.delete-btn {
   padding: 8px 16px;
   background: #0078ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.rate-btn {
+  padding: 8px 16px;
+  background: #f65936;
   color: white;
   border: none;
   border-radius: 8px;
